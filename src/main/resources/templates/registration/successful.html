@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Successful</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}">
+    <style>
+        .center {
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="bs-calltoaction bs-calltoaction-info">
+            <div class="cta-contents center">
+                <h1 th:if="${updated}" class="cta-title">Your information updated successfully!</h1>
+                <h1 th:unless="${updated}" class="cta-title">Registration completed successfully!</h1>
+            </div>
+    </div>
+    <script>
+        window.setTimeout(function() {
+            window.location.replace("home");
+        }, 1500);
+    </script>
+</div>
+</body>
+</html>

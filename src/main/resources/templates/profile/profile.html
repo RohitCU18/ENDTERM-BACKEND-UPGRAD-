@@ -1,0 +1,162 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <div th:include="fragments/header :: headTag"></div>
+
+    <title th:utext="${user.name} + ' ' + ${user.surName}"></title>
+
+    <link rel="stylesheet" th:href="@{/css/profile.css}"/>
+
+    <script th:src="@{/js/jquery.maskedinput.min.js}" defer></script>
+    <script th:src="@{/js/maskPhone.js}" defer></script>
+    <script th:src="@{/js/validatePassword.js}" defer></script>
+    <script th:src="@{/js/changePassword.js}" defer></script>
+    <script th:src="@{/js/deleteAccount.js}" defer></script>
+
+</head>
+<body>
+<div th:include="fragments/bodyHeader :: bodyHeader"></div>
+
+<div class="container">
+    <div class="row main">
+        <div class="col-md-6">
+            <form th:action="@{/profile}" method="POST" th:object="${userTo}">
+                <fieldset>
+                    <legend class="text-center">Edit personal info.<span class="req"><small> required *</small></span>
+                    </legend>
+
+                    <input type="hidden" id="id" name="id" th:field="*{id}">
+                    <input type="hidden" id="password" name="password" value="stub$$$" th:field="*{password}">
+
+                    <div class="form-group">
+                        <label for="name"><span class="req">* </span> First name: </label>
+                        <input class="form-control" th:field="*{name}"
+                               type="text" name="name" id="name"/>
+                        <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                               class="validation-message"></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="surName"><span class="req">* </span> Last name: </label>
+                        <input class="form-control" th:field="*{surName}"
+                               type="text" name="surName" id="surName"/>
+                        <label th:if="${#fields.hasErrors('surName')}" th:errors="*{surName}"
+                               class="validation-message"></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone"><span class="req">* </span> Phone Number: </label>
+                        <input type="text" name="phone" th:field="*{phone}" id="phone" class="form-control phone"
+                               placeholder="Phone number"/>
+                        <label th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
+                               class="validation-message"></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address: </label>
+                        <input class="form-control" th:field="*{email}" type="text" name="email" id="email"/>
+                        <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                               class="validation-message"></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homeNumber">Home number: </label>
+                        <input class="form-control" th:field="*{homeNumber}" type="text" name="homeNumber"
+                               id="homeNumber"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address: </label>
+                        <input class="form-control" th:field="*{address}" type="text" name="address" id="address"/>
+                    </div>
+
+                    <div class="form-group">
+                        <a class="btn btn-warning" onclick="changePass()">
+                            Change password
+                        </a>
+                    </div>
+
+                    <div class="form-group">
+                        <input class="btn btn-success" type="submit" name="submit_save" value="Save">
+                    </div>
+                </fieldset>
+            </form>
+
+            <hr/>
+            <a class="btn btn-danger delete" onclick="deleteModal()">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                Delete account
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="editPassword">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="modalTitle"></h2>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="passwordForm">
+
+                    <div class="form-group">
+                        <div class="col-xs-9">
+                            <label for="currentPassword"><span class="req">* </span> Current Password: </label>
+                            <input required name="currentPassword" type="password" class="form-control inputpass"
+                                   id="currentPassword"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-9">
+                            <label for="newPassword"><span class="req">* </span> New Password: </label>
+                            <input required name="newPassword" type="password" class="form-control inputpass"
+                                   placeholder="Length must be least 5 symbols" id="newPassword"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-9">
+                            <label for="newPassword"><span class="req">* </span> Password Confirm: </label>
+                            <input required type="password" class="form-control inputpass"
+                                   placeholder="Enter again to validate" name="confirmPass" id="confirmPass"
+                                   onkeyup="checkPass();"/>
+                            <span id="confirmMessage" class="confirmMessage"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button id="validButton" class="btn btn-primary" type="button" onclick="savePassword()" disabled>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure you want to delete your account?</h4>
+            </div>
+            <div class="modal-body">
+                <p>All your records and personal info will be deleted!</p>
+                <div class="row">
+                    <div class="col-12-xs text-center">
+                        <button class="btn btn-success btn-md" onclick="deleteAccount()">Yes</button>
+                        <button class="btn btn-danger btn-md" data-dismiss="modal" aria-hidden="true">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

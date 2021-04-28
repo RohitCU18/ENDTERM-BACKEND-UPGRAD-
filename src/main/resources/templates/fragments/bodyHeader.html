@@ -1,0 +1,29 @@
+<html th:fragment="bodyHeader" xmlns:th="http://www.thymeleaf.org" class="navbar navbar-inverse navbar-fixed-top"
+      role="navigation" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link rel="stylesheet" th:href="@{/css/fragments/bodyHeader.css}">
+</head>
+
+<body>
+        <header class="body-header">
+            <div class="header-limiter">
+
+                <h1><a th:href="@{/home}">Phone<span>Book</span></a></h1>
+
+                <div sec:authorize="isAuthenticated()">
+                    <nav>
+                        <a th:href="@{/profile}"
+                           th:utext="${user.name} + ' ' + ${user.surName}"></a>
+                    </nav>
+                    <ul>
+                        <br/>
+                        <li><a th:href="@{/logout}">Logout</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </header>
+</body>
+</html>
